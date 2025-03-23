@@ -1,0 +1,33 @@
+---
+import logoCajon from "../../assets/img/logoCajon.webp";
+// Definimos las props que el componente recibirá
+const { showHeading = false } = Astro.props;
+---
+
+<div class="container">
+  <img src={logoCajon.src} alt="Imagen descriptiva" class="image" />
+  {showHeading && <h1 class="heading">Bienvenido al Cajón del aprendizaje</h2>}
+</div>
+
+<style>
+  .container {
+    max-width: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;    
+    align-items: center;
+    gap: 1rem;
+  }
+  .image {
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
+    border-radius: 0.8rem;
+  }
+  .heading {
+    font-size: 3rem;
+    color: #333;
+    text-align: center;
+    max-width: 30rem;
+  }
+</style>

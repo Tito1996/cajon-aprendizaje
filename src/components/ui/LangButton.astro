@@ -1,0 +1,37 @@
+---
+import { getTranslations } from "../../utils/i18n";
+
+// Obtener idioma guardado en localStorage o en la URL
+const lang = Astro.url.searchParams.get("lang") || "es";
+const t = getTranslations(lang);
+
+const langSelector = document.getElementById(
+  "lang-selector"
+) as HTMLSelectElement | null;
+
+if (langSelector) {
+  langSelector.addEventListener("change", (event: Event) => {
+    const target = event.target as HTMLSelectElement;
+    const selectedLang = target ? target.value : "es";
+    localStorage.setItem("lang", selectedLang);
+    window.location.search = "?lang=" + selectedLang;
+  });
+}
+
+// Mantener el idioma al recargar
+document.addEventListener("DOMContentLoaded", () => {
+  const savedLang = localStorage.getItem("lang") || "es";
+  if (langSelector) {
+    langSelector.value = savedLang;
+  }
+});
+---
+
+<section>
+  <!-- Selector de idioma -->
+  <select id="lang-selector">
+    <option value="es" selected={lang === "es"}>Español</option>
+    <option value="ca" selected={lang === "val"}>Valencià</option>
+    <option value="en" selected={lang === "en"}>English</option>
+  </select>
+</section>
