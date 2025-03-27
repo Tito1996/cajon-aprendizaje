@@ -1,37 +1,106 @@
 ---
-import { getTranslations } from "../../utils/i18n";
+import esFlag from "../../assets/img/es-flag.svg";
+import enFlag from "../../assets/img/gb-flag.svg";
+import catFlag from "../../assets/img/ct-flag.svg";
+// Lista de idiomas con banderas
+const languages = [
+  { code: "es", name: "Español", flag: esFlag.src },
+  { code: "en", name: "English", flag: enFlag.src },
+  { code: "fr", name: "Valencià", flag: catFlag.src },
+];
 
-// Obtener idioma guardado en localStorage o en la URL
-const lang = Astro.url.searchParams.get("lang") || "es";
-const t = getTranslations(lang);
-
-const langSelector = document.getElementById(
-  "lang-selector"
-) as HTMLSelectElement | null;
-
-if (langSelector) {
-  langSelector.addEventListener("change", (event: Event) => {
-    const target = event.target as HTMLSelectElement;
-    const selectedLang = target ? target.value : "es";
-    localStorage.setItem("lang", selectedLang);
-    window.location.search = "?lang=" + selectedLang;
-  });
-}
-
-// Mantener el idioma al recargar
-document.addEventListener("DOMContentLoaded", () => {
-  const savedLang = localStorage.getItem("lang") || "es";
-  if (langSelector) {
-    langSelector.value = savedLang;
-  }
-});
+const savedLang = "es";
+const currentLang =
+  languages.find((lang) => lang.code === savedLang) || languages[0];
 ---
 
-<section>
-  <!-- Selector de idioma -->
-  <select id="lang-selector">
-    <option value="es" selected={lang === "es"}>Español</option>
-    <option value="ca" selected={lang === "val"}>Valencià</option>
-    <option value="en" selected={lang === "en"}>English</option>
-  </select>
-</section>
+<div class="language-selector">
+  <!-- Botón con la bandera actual -->
+  <button class="lang-button" id="lang-button">
+    <img src={currentLang.flag} alt={currentLang.name} class="flag" />
+  </button>
+
+  <!-- Lista desplegable con opciones -->
+  <ul class="lang-dropdown">
+    {
+      languages.map((lang) => (
+        <li id={lang.code}>
+          <img src={lang.flag} alt={lang.name} class="flag" />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  const langButton = document.getElementById("lang-button");
+  const langDropdown = document.querySelector(".lang-dropdown");
+
+  if (langButton && langDropdown) {
+    langButton.addEventListener("click", () => {
+      langDropdown.classList.toggle("show");
+    });
+
+    langDropdown.addEventListener("click", (e) => {
+      langDropdown.classList.remove("show");
+    });
+  }
+</script>
+
+<style>
+  .language-selector {
+    position: relative;
+    display: inline-block;
+  }
+
+  .lang-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+  }
+
+  .flag {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  .lang-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    z-index: 1000;
+  }
+
+  .lang-dropdown.show {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .lang-option {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .lang-option:hover {
+    background: #f0f0f0;
+  }
+</style>
